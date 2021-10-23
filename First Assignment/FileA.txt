@@ -1,1 +1,2 @@
 This is the first line of FileA.txt :)
+First line added to FileA in test2 branch.
