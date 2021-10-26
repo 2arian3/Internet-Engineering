@@ -1,0 +1,20 @@
+diff --git a/First Assignment/FileB.txt b/First Assignment/FileB.txt
+index 6867d8e..f225270 100644
+--- a/First Assignment/FileB.txt	
++++ b/First Assignment/FileB.txt	
+@@ -1 +1,2 @@
+-FileC is created to be shared with my teammate ;)
+\ No newline at end of file
++FileC is created to be shared with my teammate ;)
++This line is added to be applied to another computer using git stash.
+\ No newline at end of file
+diff --git a/First Assignment/FileC.txt b/First Assignment/FileC.txt
+index 6867d8e..f225270 100644
+--- a/First Assignment/FileC.txt	
++++ b/First Assignment/FileC.txt	
+@@ -1 +1,2 @@
+-FileC is created to be shared with my teammate ;)
+\ No newline at end of file
++FileC is created to be shared with my teammate ;)
++This line is added to be applied to another computer using git stash.
+\ No newline at end of file
