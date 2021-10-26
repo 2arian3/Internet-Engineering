@@ -39,5 +39,6 @@ git add FileA.txt
 git commit -m "<commit-message>" --> This commit contains a hash
 git push origin test2
 git checkout master
-git rebase <commit-hash>
+git cherry-pick <commit-hash> --> For second commit.
+git reabse test2
 ```
