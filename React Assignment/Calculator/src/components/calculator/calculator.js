@@ -47,12 +47,25 @@ export default function Calculator() {
           });
           break;
         case '÷':
-          setResult(String(calculation()));
-          setState({
-            currentNum: '0',
-            lastNum: String(calculation()),
-            op: '÷'
-          });
+          let resultOfCalc = String(calculation());
+          if (resultOfCalc !== 'undefined') {
+            setResult(resultOfCalc);
+            setState({
+              currentNum: '0',
+              lastNum: String(resultOfCalc),
+              op: '÷'
+            });
+          } else {
+            setResult('Invalid Input');
+            setTimeout(() => {
+              setResult('0');
+              setState({
+                currentNum: '0',
+                lastNum: '0',
+                op: '='
+              });
+            }, 500);
+          }
           break;
         case '%':
           setResult(String(parseFloat(state.currentNum) / 100));
@@ -64,6 +77,7 @@ export default function Calculator() {
           break;
         case '.':
           if (!state.currentNum.includes('.')) {
+            setResult(state.currentNum + '.');
             setState({
               currentNum: state.currentNum + '.',
               lastNum: state.lastNum,
@@ -81,7 +95,7 @@ export default function Calculator() {
           break;
         case '=':
           if (state.op !== '=') {
-            const resultOfCalc = String(calculation());
+            let resultOfCalc = String(calculation());
             if (resultOfCalc !== 'undefined') {
               setResult(String(calculation()));
               setState({
