@@ -6,15 +6,16 @@ import s from './calculator.module.css';
 export default function Calculator() {
   const [state, setState] = useState({
     currentNum: '0',
-    result: '0',
+    lastNum: '0',
     op: '='
   });
+  const [result, setResult] = useState('0');
 
   function calculation() {
-    return  state.op === '+' ? (+state.currentNum) + (+state.result) :
-            state.op === '-' ? (+state.result) - (+state.currentNum) :
-            state.op === 'x' ? (+state.currentNum) * (+state.result) :
-            state.op === '÷' && (+state.currentNum) !== 0 ? (+state.result) / (+state.currentNum) :
+    return  state.op === '+' ? (+state.currentNum) + (+state.lastNum) :
+            state.op === '-' ? (+state.lastNum) - (+state.currentNum) :
+            state.op === 'x' ? (+state.currentNum) * (+state.lastNum) :
+            state.op === '÷' && (+state.currentNum) !== 0 ? (+state.lastNum) / (+state.currentNum) :
             state.op === '=' ? +state.currentNum : 'undefined';
   }
 
@@ -22,37 +23,41 @@ export default function Calculator() {
     if (pressedKey) {
       switch (pressedKey) {
         case '+':
+          setResult(String(calculation()));
           setState({
-            currentNum: state.op === '=' ? '0' : String(calculation()),
-            result: state.currentNum,
+            currentNum: '0',
+            lastNum: String(calculation()),
             op: '+'
           });
           break;
         case '-':
+          setResult(String(calculation()));
           setState({
-            currentNum: state.op === '=' ? '0' : String(calculation()),
-            result: state.currentNum,
+            currentNum: '0',
+            lastNum: String(calculation()),
             op: '-'
           });
           break;
         case 'x':
+          setResult(String(calculation()));
           setState({
-            currentNum: state.op === '=' ? '0' : String(calculation()),
-            result: state.currentNum,
+            currentNum: '0',
+            lastNum: String(calculation()),
             op: 'x'
           });
           break;
         case '÷':
+          setResult(String(calculation()));
           setState({
-            currentNum: state.op === '=' ? '0' : String(calculation()),
-            result: state.currentNum,
+            currentNum: '0',
+            lastNum: String(calculation()),
             op: '÷'
           });
           break;
         case '%':
           setState({
             currentNum: String(parseFloat(state.currentNum) / 100),
-            result: state.result,
+            lastNum: state.lastNum,
             op: state.op
           });
           break;
@@ -60,15 +65,16 @@ export default function Calculator() {
           if (!state.currentNum.includes('.')) {
             setState({
               currentNum: state.currentNum + '.',
-              result: state.result,
+              lastNum: state.lastNum,
               op: state.op
             });
           }
           break;
         case '+/-':
+          setResult(String(-state.currentNum));
           setState({
             currentNum: String(-state.currentNum),
-            result: state.result,
+            lastNum: state.lastNum,
             op: state.op
           });
           break;
@@ -76,21 +82,19 @@ export default function Calculator() {
           if (state.op !== '=') {
             const resultOfCalc = String(calculation());
             if (resultOfCalc !== 'undefined') {
+              setResult(String(calculation()));
               setState({
                 currentNum: String(calculation()),
-                result: '0',
+                lastNum: '0',
                 op: '='
               });
             } else {
-              setState({
-                currentNum: 'Invalid Input',
-                result: '0',
-                op: '='
-              });
+              setResult('Invalid Input');
               setTimeout(() => {
+                setResult('0');
                 setState({
                   currentNum: '0',
-                  result: '0',
+                  lastNum: '0',
                   op: '='
                 });
               }, 500);
@@ -98,17 +102,19 @@ export default function Calculator() {
           }
           break;
         case 'C':
+          setResult('0');
           setState({
             currentNum: '0',
-            result: '0',
+            lastNum: '0',
             op: '='
           });
           break;
         default:
           const newValue = state.currentNum === '0' ? pressedKey : state.currentNum + pressedKey;
+          setResult(newValue);
           setState({
             currentNum: newValue,
-            result: state.result,
+            lastNum: state.lastNum,
             op: state.op
           });
           break;
@@ -118,7 +124,7 @@ export default function Calculator() {
 
   return (
     <div className={s.calculator}>
-      <Screen text={ state.currentNum }/>
+      <Screen text={ result }/>
       <Keypad pressedKey={ handlePressedKey } currentOp={ state.op }/>
     </div>
   );
