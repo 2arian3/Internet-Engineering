@@ -3,7 +3,7 @@ import s from './keypad.module.css';
 import Button from '../button';
 import cx from 'classnames';
 
-export default function Keypad({ pressedKey }) {
+export default function Keypad({ pressedKey, currentOp }) {
   const handleButtonClick = (button) => {
     pressedKey(button);
   };
@@ -40,6 +40,7 @@ export default function Keypad({ pressedKey }) {
           className={cx(
             button.isLarge && s['button-2x'],
             button.isDark && s.dark,
+            button.text === currentOp && currentOp !== '=' && s.highlight
           )}
         />
       ))}

@@ -15,7 +15,7 @@ export default function Calculator() {
             state.op === '-' ? (+state.result) - (+state.currentNum) :
             state.op === 'x' ? (+state.currentNum) * (+state.result) :
             state.op === '÷' && (+state.currentNum) !== 0 ? (+state.result) / (+state.currentNum) :
-            'undefined';
+            state.op === '=' ? +state.currentNum : 'undefined';
   }
 
   function handlePressedKey(pressedKey) {
@@ -23,28 +23,28 @@ export default function Calculator() {
       switch (pressedKey) {
         case '+':
           setState({
-            currentNum: '0',
+            currentNum: state.op === '=' ? '0' : String(calculation()),
             result: state.currentNum,
             op: '+'
           });
           break;
         case '-':
           setState({
-            currentNum: '0',
+            currentNum: state.op === '=' ? '0' : String(calculation()),
             result: state.currentNum,
             op: '-'
           });
           break;
         case 'x':
           setState({
-            currentNum: '0',
+            currentNum: state.op === '=' ? '0' : String(calculation()),
             result: state.currentNum,
             op: 'x'
           });
           break;
         case '÷':
           setState({
-            currentNum: '0',
+            currentNum: state.op === '=' ? '0' : String(calculation()),
             result: state.currentNum,
             op: '÷'
           });
@@ -119,7 +119,7 @@ export default function Calculator() {
   return (
     <div className={s.calculator}>
       <Screen text={ state.currentNum }/>
-      <Keypad pressedKey={ handlePressedKey }/>
+      <Keypad pressedKey={ handlePressedKey } currentOp={ state.op }/>
     </div>
   );
 }
