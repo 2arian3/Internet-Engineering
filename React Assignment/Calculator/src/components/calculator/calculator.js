@@ -55,6 +55,7 @@ export default function Calculator() {
           });
           break;
         case '%':
+          setResult(String(parseFloat(state.currentNum) / 100));
           setState({
             currentNum: String(parseFloat(state.currentNum) / 100),
             lastNum: state.lastNum,
