@@ -5,13 +5,14 @@ import s from './calculator.module.css';
 
 export default function Calculator() {
   const [state, setState] = useState({
-    currentNum: '0',
-    lastNum: '0',
-    op: '='
+    currentNum: null,
+    lastNum: null,
+    op: ''
   });
   const [result, setResult] = useState('0');
-  const [entered, setEntered] = useState(false);
+  const [enteredNum, setEnteredNum] = useState(false);
   const [lastOpNum, setLastOpNum] = useState(null);
+  const [pressedEqual, setPressedEqual] = useState(false);
 
   function calculation() {
     let firstNum = state.currentNum;
@@ -36,89 +37,120 @@ export default function Calculator() {
       switch (pressedKey) {
         case '+':
           setLastOpNum(null);
-          if (entered) {
+          console.log(state, pressedEqual);
+          if (state.currentNum && state.lastNum && !pressedEqual) {
             setResult(String(calculation()));
             setState({
-              currentNum: '0',
+              currentNum: null,
               lastNum: String(calculation()),
+              op: '+'
+            });
+          } else if (enteredNum && state.currentNum) {
+            setState({
+              currentNum: null,
+              lastNum: state.currentNum,
               op: '+'
             });
           } else {
             setState({
-              currentNum: '0',
-              lastNum: state.currentNum,
+              currentNum: state.currentNum,
+              lastNum: state.lastNum,
               op: '+'
             });
           }
-          setEntered(false);
+          setPressedEqual(false);
+          setEnteredNum(false);
           break;
         case '-':
           setLastOpNum(null);
-          if (entered) {
+          console.log(state, pressedEqual);
+          if (state.currentNum && state.lastNum && !pressedEqual) {
             setResult(String(calculation()));
             setState({
-              currentNum: '0',
+              currentNum: null,
               lastNum: String(calculation()),
+              op: '-'
+            });
+          } else if (enteredNum && state.currentNum) {
+            setState({
+              currentNum: null,
+              lastNum: state.currentNum,
               op: '-'
             });
           } else {
             setState({
-              currentNum: '0',
-              lastNum: state.currentNum,
+              currentNum: state.currentNum,
+              lastNum: state.lastNum,
               op: '-'
             });
           }
-          setEntered(false);
+          setPressedEqual(false);
+          setEnteredNum(false);
           break;
         case 'x':
           setLastOpNum(null);
-          if (entered) {
+          if (state.currentNum && state.lastNum && !pressedEqual) {
             setResult(String(calculation()));
             setState({
-              currentNum: '0',
+              currentNum: null,
               lastNum: String(calculation()),
+              op: 'x'
+            });
+          } else if (enteredNum && state.currentNum) {
+            setState({
+              currentNum: null,
+              lastNum: state.currentNum,
               op: 'x'
             });
           } else {
             setState({
-              currentNum: '0',
-              lastNum: state.currentNum,
+              currentNum: state.currentNum,
+              lastNum: state.lastNum,
               op: 'x'
             });
           }
-          setEntered(false);
+          setPressedEqual(false);
+          setEnteredNum(false);
           break;
         case '÷':
           setLastOpNum(null);
           let resultOfCalc = String(calculation());
-          if (resultOfCalc !== 'undefined' && entered) {
+          if (state.currentNum && state.lastNum && resultOfCalc !== 'undefined' && !pressedEqual) {
             setResult(resultOfCalc);
             setState({
-              currentNum: '0',
+              currentNum: null,
               lastNum: String(resultOfCalc),
               op: '÷'
             });
-          } else if (resultOfCalc === 'undefined') {
+          } else if (state.currentNum && state.lastNum && resultOfCalc === 'undefined') {
             setResult('Invalid Input');
             setTimeout(() => {
               setResult('0');
               setState({
-                currentNum: '0',
-                lastNum: '0',
-                op: ''
+                currentNum: null,
+                lastNum: null,
+                op: '÷'
               });
             }, 500);
-          } else {
+          } else if (enteredNum && state.currentNum) {
             setState({
-              currentNum: '0',
+              currentNum: null,
               lastNum: state.currentNum,
               op: '÷'
             });
+          } else {
+            setState({
+              currentNum: state.currentNum,
+              lastNum: state.lastNum,
+              op: '÷'
+            });
           }
-          setEntered(false);
+          setPressedEqual(false);
+          setEnteredNum(false);
           break;
         case '%':
           setLastOpNum(null);
+          setPressedEqual(true);
           setResult(String(parseFloat(state.currentNum) / 100));
           setState({
             currentNum: String(parseFloat(state.currentNum) / 100),
@@ -127,11 +159,11 @@ export default function Calculator() {
           });
           break;
         case '.':
-          if (!state.currentNum.includes('.')) {
+          if ((state.currentNum && !state.currentNum.includes('.')) || !state.currentNum) {
             setLastOpNum(null);
             setResult(state.currentNum + '.');
             setState({
-              currentNum: state.currentNum + '.',
+              currentNum: state.currentNum ? state.currentNum + '.' : '0.',
               lastNum: state.lastNum,
               op: state.op
             });
@@ -140,6 +172,7 @@ export default function Calculator() {
         case '+/-':
           setLastOpNum(null);
           setResult(String(-state.currentNum));
+          setPressedEqual(true);
           setState({
             currentNum: String(-state.currentNum),
             lastNum: state.lastNum,
@@ -147,8 +180,7 @@ export default function Calculator() {
           });
           break;
         case '=':
-          if (state.op) {
-            setEntered(false);
+          if (state.op && state.currentNum && state.lastNum) {
             let resultOfCalc = String(calculation());
             if (resultOfCalc !== 'undefined') {
               if (!lastOpNum) {
@@ -166,28 +198,31 @@ export default function Calculator() {
               setTimeout(() => {
                 setResult('0');
                 setState({
-                  currentNum: '0',
-                  lastNum: '0',
+                  currentNum: null,
+                  lastNum: null,
                   op: ''
                 });
               }, 500);
             }
+            setPressedEqual(true);
           }
           break;
         case 'C':
+          setEnteredNum(false);
           setLastOpNum(null);
-          setEntered(false);
+          setPressedEqual(false);
           setResult('0');
           setState({
-            currentNum: '0',
-            lastNum: '0',
+            currentNum: null,
+            lastNum: null,
             op: ''
           });
           break;
         default:
-          const newValue = state.currentNum === '0' || lastOpNum ? pressedKey : state.currentNum + pressedKey;
-          setEntered(true);
+          const newValue = state.currentNum === null || lastOpNum ? pressedKey : state.currentNum + pressedKey;
           setResult(newValue);
+          setEnteredNum(true);
+          setPressedEqual(false);
           setState({
             currentNum: newValue,
             lastNum: state.lastNum,
