@@ -37,7 +37,6 @@ export default function Calculator() {
       switch (pressedKey) {
         case '+':
           setLastOpNum(null);
-          console.log(state, pressedEqual);
           if (state.currentNum && state.lastNum && !pressedEqual) {
             setResult(String(calculation()));
             setState({
@@ -63,7 +62,6 @@ export default function Calculator() {
           break;
         case '-':
           setLastOpNum(null);
-          console.log(state, pressedEqual);
           if (state.currentNum && state.lastNum && !pressedEqual) {
             setResult(String(calculation()));
             setState({
