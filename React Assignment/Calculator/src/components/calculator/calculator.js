@@ -217,7 +217,7 @@ export default function Calculator() {
           });
           break;
         default:
-          const newValue = state.currentNum === null || lastOpNum ? pressedKey : state.currentNum + pressedKey;
+          const newValue = state.currentNum === null || state.currentNum === '0' || lastOpNum ? pressedKey : state.currentNum + pressedKey;
           setResult(newValue);
           setEnteredNum(true);
           setPressedEqual(false);
