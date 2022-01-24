@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 from functools import wraps
-from . import SECRET_KEY
-import jwt
+from .utils import decode_jwt
 
 auth = Blueprint('auth', __name__)
 
@@ -15,8 +14,8 @@ def is_admin(f):
             return jsonify({'message': 'Token is not included!'}), 403
 
         try:
-            data = jwt.decode(token, SECRET_KEY, 'HS256')
-            if not data['admin']:
+            data = decode_jwt(token)
+            if not data.is_admin:
                 return jsonify({'message': 'You don\'t have access'}), 401
 
         except:

@@ -2,9 +2,53 @@ from flask import Blueprint, request, jsonify
 from . import db
 from .models import Movie, User, Vote, Comment
 from .auth import is_admin
-from .utils import row_to_dict
+from .utils import row_to_dict, check_hash, generate_hash, encode_jwt
 
 views = Blueprint('views', __name__)
+
+
+@views.route('/', methods=['GET', 'POST'])
+@views.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        body = request.json
+        if 'username' in body and type(body['username']) == str \
+           and 'password' in body and type(body['password']) == str:
+            user = User.query.filter_by(username=body['username']).first()
+            if not user:
+                return jsonify({'message': 'Entered user does not exist or username is incorrect'}), 401
+
+            if check_hash(user.password, body['password']):
+                return jsonify({'token': encode_jwt(user_id=user.id, is_admin=(user.role == 1))}), 200
+
+            else:
+                return jsonify({'message': 'Incorrect password'}), 401
+
+        else:
+            return jsonify({'message': 'Invalid body (Include username and password as string in body)'}), 403
+
+    return jsonify({'message': 'Enter username and password using POST method'}), 400
+
+
+@views.route('/signup', methods=['GET', 'POST'])
+def sign_up():
+    if request.method == 'POST':
+        body = request.json
+        if 'username' in body and type(body['username']) == str \
+                and 'password' in body and type(body['password']) == str:
+            user = User.query.filter_by(username=body['username']).first()
+            if user:
+                return jsonify({'message': 'Entered username already exists'}), 409
+            user = User(username=body['username'], password=generate_hash(body['password']))
+            db.session.add(user)
+            db.session.commit()
+
+            user = User.query.filter_by(username=body['username']).first()
+            return jsonify({'token': encode_jwt(user_id=user.id, is_admin=(user.role == 1))}), 201
+        else:
+            return jsonify({'message': 'Invalid body (Include username and password as string in body)'}), 403
+
+    return jsonify({'message': 'Enter username and password using POST method'}), 400
 
 
 @views.route('/comments', methods=['GET'])

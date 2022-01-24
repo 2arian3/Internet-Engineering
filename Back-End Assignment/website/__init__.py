@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 DB_NAME = 'IMDB.db'
+ALGORITHM = 'HS256'
 SECRET_KEY = 'thisisasecretkeyandhopeyoucantseeit' \
              'thisisasecretkeyandhopeyoucantseeit' \
              'thisisasecretkeyandhopeyoucantseeit' \

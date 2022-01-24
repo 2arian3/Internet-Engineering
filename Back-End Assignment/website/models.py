@@ -7,7 +7,7 @@ class Movie(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Float(), nullable=True)
-    comments = db.relationship('Comment')
+    comments = db.relationship('Comment', cascade="all, delete-orphan")
     __table_args__ = (
         db.CheckConstraint('0 <= rating & rating <= 1', name='rating should be between 0 and 1'),
         {})
@@ -31,7 +31,7 @@ class Comment(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    role = db.Column(db.Integer, default=1, nullable=True)
+    role = db.Column(db.Integer, default=0, nullable=True)
     username = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     __table_args__ = (
