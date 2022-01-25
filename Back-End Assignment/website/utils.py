@@ -21,14 +21,18 @@ def decode_jwt(token):
         data = jwt.decode(token, SECRET_KEY, ALGORITHM)
         return JWT(data)
     except:
-        return Exception('Invalid Token')
+        raise Exception('Invalid Token')
 
 
+'''
+The expiration date should be less than 10 days for sure:)
+It is just for testing
+'''
 def encode_jwt(user_id, is_admin=False):
     return jwt.encode({
         'user_id': user_id,
         'is_admin': is_admin,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=100)
     }, SECRET_KEY)
 
 
