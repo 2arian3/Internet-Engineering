@@ -5,7 +5,7 @@ from .utils import decode_jwt
 auth = Blueprint('auth', __name__)
 
 
-def is_admin(f):
+def is_token_valid(f):
     @wraps(f)
     def decorator(*args, **kwargs):
         token = request.headers.get('Authorization').split()[1]
@@ -14,10 +14,7 @@ def is_admin(f):
             return jsonify({'message': 'Token is not included!'}), 403
 
         try:
-            data = decode_jwt(token)
-            if not data.is_admin:
-                return jsonify({'message': 'You don\'t have access'}), 401
-
+            decode_jwt(token)
         except:
             return jsonify({'message': 'Token is invalid'}), 403
 
@@ -25,3 +22,20 @@ def is_admin(f):
 
     return decorator
 
+
+def is_admin(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        data = get_decoded_token()
+        if not data.is_admin:
+            return jsonify({'message': 'You don\'t have admin access'}), 401
+
+        return f(*args, **kwargs)
+
+    return decorator
+
+
+def get_decoded_token():
+    token = request.headers.get('Authorization').split()[1]
+
+    return decode_jwt(token)
