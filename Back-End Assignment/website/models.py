@@ -38,6 +38,7 @@ class Comment(db.Model):
 
 
 class User(db.Model):
+    # You should change role in database
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     role = db.Column(db.Integer, default=0, nullable=True)
     username = db.Column(db.String(100), unique=True)

@@ -32,7 +32,7 @@ def encode_jwt(user_id, is_admin=False):
     return jwt.encode({
         'user_id': user_id,
         'is_admin': is_admin,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=100)
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=10)
     }, SECRET_KEY)
 
 
